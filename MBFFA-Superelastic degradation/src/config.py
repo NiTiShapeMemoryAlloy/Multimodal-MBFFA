@@ -23,7 +23,7 @@ MODEL_CONFIG = {
 # Training configuration
 TRAIN_CONFIG = {
     'batch_size': 32,
-    'num_epochs': 1,
+    'num_epochs': 150,
     'learning_rate': 1e-3,
     'weight_decay': 1e-4,
     'lr_scheduler': 'cosine', # Learning rate scheduler, options: 'step', 'cosine', 'plateau'
@@ -38,4 +38,5 @@ VISUALIZATION_CONFIG = {
     'plot_accuracy': True,
     'plot_confusion_matrix': True,
     'plot_heatmap': True,    # Whether to plot material heatmaps
+
 } 
