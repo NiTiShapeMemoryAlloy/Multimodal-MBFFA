@@ -15,7 +15,7 @@ import shutil
 
 from src.config import DATA_CONFIG, MODEL_CONFIG, TRAIN_CONFIG, VISUALIZATION_CONFIG
 from src.data.dataset import MaterialDataset, get_data_loaders
-from src.models.cnn_model import MaterialCNN
+from src.models.MBFFA_model import MaterialCNN
 from src.utils.trainer import Trainer
 from src.visualization.visualizer import MaterialVisualizer
 
@@ -344,4 +344,5 @@ def main():
     print("Program execution complete")
 
 if __name__ == "__main__":
+
     main() 
