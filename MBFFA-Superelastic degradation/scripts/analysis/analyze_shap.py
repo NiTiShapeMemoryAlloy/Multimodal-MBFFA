@@ -31,7 +31,7 @@ import sys
 # Add project root to path for proper imports
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
-from src.models.cnn_model import MaterialCNN
+from src.models.MBFFA_model import MaterialCNN
 from src.config import DATA_CONFIG, MODEL_CONFIG, TRAIN_CONFIG, VISUALIZATION_CONFIG
 from src.data.dataset import MaterialDataset, get_data_loaders
 
@@ -443,4 +443,5 @@ if __name__ == "__main__":
                         help='Batch size for data loading')
     
     args = parser.parse_args()
+
     analyze_shap(args.checkpoint, args.num_samples, args.batch_size) 
