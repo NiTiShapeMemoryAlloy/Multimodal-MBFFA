@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
 
-from src.models.cnn_model import MaterialCNN
+from src.models.MBFFA_model import MaterialCNN
 from src.config import DATA_CONFIG, MODEL_CONFIG, TRAIN_CONFIG, VISUALIZATION_CONFIG
 
 def visualize_with_torchviz(model, save_path):
@@ -487,4 +487,5 @@ if __name__ == "__main__":
     print("2. 使用TensorBoard: python -m tensorboard.main --logdir=tensorboard_logs/model_graph --port=6009")
     print("3. 查看 model_visualization/model_structure.txt 文件 - 详细的文本描述")
     print("4. 查看 model_visualization/model_hierarchy.png 文件 - 模型层次结构图")
+
     print("5. 查看 model_visualization/model_flowchart.png 文件 - 模型处理流程图") 
