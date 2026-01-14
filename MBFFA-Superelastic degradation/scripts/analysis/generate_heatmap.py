@@ -31,7 +31,7 @@ import glob
 # Add project root to path for proper imports
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
-from src.models.cnn_model import MaterialCNN
+from src.models.MBFFA_model import MaterialCNN
 from src.config import DATA_CONFIG, MODEL_CONFIG, TRAIN_CONFIG, VISUALIZATION_CONFIG
 from src.data.dataset import MaterialDataset, get_data_loaders
 
@@ -434,4 +434,5 @@ if __name__ == "__main__":
         args.layer, 
         args.alpha, 
         args.output_dir
+
     ) 
