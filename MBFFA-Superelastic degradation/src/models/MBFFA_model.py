@@ -34,7 +34,7 @@ class ConvBlock(nn.Module):
 class FeatureSynergyModule(nn.Module):
     def __init__(self, feature_dims=[3, 3, 3, 3]):
         super().__init__()
-        self.feature_dims = feature_dims  # [Euler, phase, KAM, numerical]
+        self.feature_dims = feature_dims  # [Euler, phase, gnd, numerical]
         self.num_dim = feature_dims[-1]          # Current numerical feature dimension
 
         # Add a linear layer to the numerical features to make its dimensions consistent with the other features (3D).
@@ -42,12 +42,12 @@ class FeatureSynergyModule(nn.Module):
 
         # Redefine the number of input channels for interaction pairs (all based on the extended 3D numerical features).
         self.interaction_pairs = nn.ModuleDict({
-            'ipf_phase': self._build_interaction(6),  # 3+3
-            'ipf_kam': self._build_interaction(6),  # 3+3
-            'ipf_num': self._build_interaction(6),  # 3+3 (扩展后)
-            'phase_kam': self._build_interaction(6),  # 3+3
+            'euler_phase': self._build_interaction(6),  # 3+3
+            'euler_gnd': self._build_interaction(6),  # 3+3
+            'euler_num': self._build_interaction(6),  # 3+3 (扩展后)
+            'phase_gnd': self._build_interaction(6),  # 3+3
             'phase_num': self._build_interaction(6),  # 3+3 (扩展后)
-            'kam_num': self._build_interaction(6)  # 3+3 (扩展后)
+            'gnd_num': self._build_interaction(6)  # 3+3 (扩展后)
         })
 
         # 特征合并后的通道注意力（总通道数 = 3 + 3 + 3 + num_dim）
@@ -84,24 +84,24 @@ class FeatureSynergyModule(nn.Module):
 
     def forward(self, x):
         batch_size = x.size(0)
-        ipf, phase, kam, num = torch.split(x, self.feature_dims, dim=1)
+        euler, phase, gnd, num = torch.split(x, self.feature_dims, dim=1)
 
         # 扩展数值特征维度到3
         num_expanded = self.num_expand(num)  # [B, num_dim] -> [B, 3]
 
         # === 所有两两交互融合 ===
-        ipf_phase = self._apply_interaction(ipf, phase, 'ipf_phase')
-        ipf_kam = self._apply_interaction(ipf, kam, 'ipf_kam')
-        ipf_num = self._apply_interaction(ipf, num_expanded, 'ipf_num')
-        phase_kam = self._apply_interaction(phase, kam, 'phase_kam')
+        euler_phase = self._apply_interaction(euler, phase, 'euler_phase')
+        euler_gnd = self._apply_interaction(euler, gnd, 'euler_gnd')
+        euler_num = self._apply_interaction(euler, num_expanded, 'euler_num')
+        phase_gnd = self._apply_interaction(phase, gnd, 'phase_gnd')
         phase_num = self._apply_interaction(phase, num_expanded, 'phase_num')
-        kam_num = self._apply_interaction(kam, num_expanded, 'kam_num')
+        gnd_num = self._apply_interaction(gnd, num_expanded, 'gnd_num')
 
         # === 特征合并 ===
         combined = torch.cat([
-            (ipf + ipf_phase + ipf_kam + ipf_num) / 4,
-            (phase + ipf_phase + phase_kam + phase_num) / 4,
-            (kam + ipf_kam + phase_kam + kam_num) / 4,
+            (euler + euler_phase + euler_gnd + euler_num) / 4,
+            (phase + euler_phase + phase_gnd + phase_num) / 4,
+            (gnd + euler_gnd + phase_gnd + gnd_num) / 4,
             num  # 保留原始数值特征
         ], dim=1)
 
